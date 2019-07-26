@@ -7,5 +7,6 @@ import (
 
 func init() {
 	// 注册路由
-    beego.Router("/reg", &controllers.RegControllers{},"post:AddUser")
+    beego.Router("/emp/reg", &controllers.RegControllers{},"post:AddUser")
+    beego.Router("/emp/login", &controllers.LoginControllers{}, "post:Verify")
 }

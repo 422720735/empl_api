@@ -2,11 +2,11 @@ package models
 
 import (
 	"empl_api/dbops"
-	"fmt"
+	"log"
 )
 
-func AddUser(username, password string, phone, position int) error {
-	stmtIns, err := dbops.DbConn.Prepare("insert into users (user_name, pwd, phone, `position`)values (?,?,?,?)")
+func AddUser(username, password, phone string, position int) error {
+	stmtIns, err := dbops.DbConn.Prepare("insert into users (username, password, phone, `position`)values (?,?,?,?)")
 	if err != nil {
 		return err
 	}
@@ -15,6 +15,19 @@ func AddUser(username, password string, phone, position int) error {
 		return err
 	}
 	defer stmtIns.Close()
-	fmt.Println("保存成功")
 	return nil
+}
+
+func UserCount(username string) (int, error) {
+	// select pwd from users where login_name =?
+	// select count(user_name) from users where user_name='123456';
+	stmtOut, err := dbops.DbConn.Prepare("select count(username) from users where username =?")
+	if err != nil {
+		log.Panicf("%s", err)
+		return -1, err
+	}
+	var count int
+	stmtOut.QueryRow(username).Scan(&count)
+	defer stmtOut.Close()
+	return count, nil
 }
